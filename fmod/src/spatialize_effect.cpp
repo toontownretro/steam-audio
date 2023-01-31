@@ -1141,10 +1141,15 @@ IPLDirectEffectParams getDirectParams(FMOD_DSP_STATE* state,
         }
         else
         {
-            IPLDistanceAttenuationModel distanceAttenuationModel{};
-            distanceAttenuationModel.type = IPL_DISTANCEATTENUATIONTYPE_DEFAULT;
+            //IPLDistanceAttenuationModel distanceAttenuationModel{};
+            //distanceAttenuationModel.type = IPL_DISTANCEATTENUATIONTYPE_INVERSEDISTANCE;
+            //distanceAttenuationModel.minDistance = effect->distanceAttenuationMinDistance;
 
-            params.distanceAttenuation = iplDistanceAttenuationCalculate(gContext, source.origin, listener.origin, &distanceAttenuationModel);
+            //params.distanceAttenuation = iplDistanceAttenuationCalculate(gContext, source.origin, listener.origin, &distanceAttenuationModel);
+
+
+            float dist = distance(source.origin, listener.origin);
+            params.distanceAttenuation = std::min(1.0f, effect->distanceAttenuationMinDistance / dist);
         }
     }
 
