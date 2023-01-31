@@ -20,25 +20,25 @@ enum Params
 {
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_DATA`
-     * 
+     *
      *  World-space position of the source. Automatically written by FMOD Studio.
      */
     SOURCE_POSITION,
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_DATA`
-     * 
+     *
      *  Overall linear gain of this effect. Automatically read by FMOD Studio.
      */
     OVERALL_GAIN,
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_INT`
-     * 
+     *
      *  **Range**: 0 to 2.
-     * 
+     *
      *  How to render distance attenuation.
-     * 
+     *
      *  -   `0`: Don't render distance attenuation.
      *  -   `1`: Use a distance attenuation value calculated using the default physics-based model.
      *  -   `2`: Use a distance attenuation value calculated using the curve specified in the FMOD Studio UI.
@@ -51,7 +51,7 @@ enum Params
      *  **Range**: 0 to 2.
      *
      *  How to render air absorption.
-     * 
+     *
      *  -   `0`: Don't render air absorption.
      *  -   `1`: Use air absorption values calculated using the default exponential decay model.
      *  -   `2`: Use air absorption values specified in the \c AIRABSORPTION_LOW, \c AIRABSORPTION_MID, and
@@ -65,9 +65,9 @@ enum Params
      *  **Range**: 0 to 2.
      *
      *  How to render directivity.
-     * 
+     *
      *  -   `0`: Don't render directivity.
-     *  -   `1`: Use a directivity value calculated using the default dipole model, driven by the 
+     *  -   `1`: Use a directivity value calculated using the default dipole model, driven by the
      *           \c DIRECTIVITY_DIPOLEWEIGHT and \c DIRECTIVITY_DIPOLEPOWER parameters.
      *  -   `2`: Use the directivity value specified in the \c DIRECTIVITY parameter.
      */
@@ -79,7 +79,7 @@ enum Params
      *  **Range**: 0 to 2.
      *
      *  How to render occlusion.
-     * 
+     *
      *  -   `0`: Don't render occlusion.
      *  -   `1`: Use the occlusion value calculated by the game engine using simulation, and provided via the
      *           \c SIMULATION_OUTPUTS parameter.
@@ -93,7 +93,7 @@ enum Params
      *  **Range**: 0 to 2.
      *
      *  How to render transmission.
-     * 
+     *
      *  -   `0`: Don't render transmission.
      *  -   `1`: Use the transmission values calculated by the game engine using simulation, and provided via the
      *           \c SIMULATION_OUTPUTS parameter.
@@ -104,7 +104,7 @@ enum Params
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_BOOL`
-     * 
+     *
      *  If true, reflections are rendered, using the data calculated by the game engine using simulation, and provided
      *  via the \c SIMULATION_OUTPUTS parameter.
      */
@@ -126,13 +126,13 @@ enum Params
      *  Controls how HRTFs are interpolated when the source moves relative to the listener.
      *
      *  - `0`: Nearest-neighbor interpolation.
-     *  - `1`: Bilinear interpolation. 
+     *  - `1`: Bilinear interpolation.
      */
     HRTF_INTERPOLATION,
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_FLOAT`
-     * 
+     *
      *  Not currently used.
      */
     DISTANCEATTENUATION,
@@ -143,7 +143,7 @@ enum Params
      *  **Range**: 0 to 4.
      *
      *  Type of distance attenuation curve preset to use when \c APPLY_DISTANCEATTENUATION is \c 1.
-     * 
+     *
      *  - `0`: Linear squared rolloff.
      *  - `1`: Linear rolloff.
      *  - `2`: Inverse rolloff.
@@ -175,7 +175,7 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The low frequency (up to 800 Hz) EQ value for air absorption. Only used if \c APPLY_AIRABSORPTION is set to 
+     *  The low frequency (up to 800 Hz) EQ value for air absorption. Only used if \c APPLY_AIRABSORPTION is set to
      *  \c 2. 0 = low frequencies are completely attenuated, 1 = low frequencies are not attenuated at all.
      */
     AIRABSORPTION_LOW,
@@ -185,7 +185,7 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The middle frequency (800 Hz - 8 kHz) EQ value for air absorption. Only used if \c APPLY_AIRABSORPTION is set 
+     *  The middle frequency (800 Hz - 8 kHz) EQ value for air absorption. Only used if \c APPLY_AIRABSORPTION is set
      *  to \c 2. 0 = middle frequencies are completely attenuated, 1 = middle frequencies are not attenuated at all.
      */
     AIRABSORPTION_MID,
@@ -195,7 +195,7 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The high frequency (8 kHz and above) EQ value for air absorption. Only used if \c APPLY_AIRABSORPTION is set to 
+     *  The high frequency (8 kHz and above) EQ value for air absorption. Only used if \c APPLY_AIRABSORPTION is set to
      *  \c 2. 0 = high frequencies are completely attenuated, 1 = high frequencies are not attenuated at all.
      */
     AIRABSORPTION_HIGH,
@@ -205,7 +205,7 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The directivity attenuation value. Only used if \c APPLY_DIRECTIVITY is set to \c 2. 0 = sound is completely 
+     *  The directivity attenuation value. Only used if \c APPLY_DIRECTIVITY is set to \c 2. 0 = sound is completely
      *  attenuated, 1 = sound is not attenuated at all.
      */
     DIRECTIVITY,
@@ -215,9 +215,9 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  Blends between monopole (omnidirectional) and dipole directivity patterns. 0 = pure monopole (sound is emitted 
-     *  in all directions with equal intensity), 1 = pure dipole (sound is focused to the front and back of the source). 
-     *  At 0.5, the source has a cardioid directivity, with most of the sound emitted to the front of the source. Only 
+     *  Blends between monopole (omnidirectional) and dipole directivity patterns. 0 = pure monopole (sound is emitted
+     *  in all directions with equal intensity), 1 = pure dipole (sound is focused to the front and back of the source).
+     *  At 0.5, the source has a cardioid directivity, with most of the sound emitted to the front of the source. Only
      *  used if \c APPLY_DIRECTIVITY is set to \c 1.
      */
     DIRECTIVITY_DIPOLEWEIGHT,
@@ -227,7 +227,7 @@ enum Params
      *
      *  **Range**: 0 to 4.
      *
-     *  Controls how focused the dipole directivity is. Higher values result in sharper directivity patterns. Only used 
+     *  Controls how focused the dipole directivity is. Higher values result in sharper directivity patterns. Only used
      *  if \c APPLY_DIRECTIVITY is set to \c 1.
      */
     DIRECTIVITY_DIPOLEPOWER,
@@ -237,7 +237,7 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The occlusion attenuation value. Only used if \c APPLY_OCCLUSION is set to \c 2. 0 = sound is completely 
+     *  The occlusion attenuation value. Only used if \c APPLY_OCCLUSION is set to \c 2. 0 = sound is completely
      *  attenuated, 1 = sound is not attenuated at all.
      */
     OCCLUSION,
@@ -259,7 +259,7 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The low frequency (up to 800 Hz) EQ value for transmission. Only used if \c APPLY_TRANSMISSION is set to \c 2. 
+     *  The low frequency (up to 800 Hz) EQ value for transmission. Only used if \c APPLY_TRANSMISSION is set to \c 2.
      *  0 = low frequencies are completely attenuated, 1 = low frequencies are not attenuated at all.
      */
     TRANSMISSION_LOW,
@@ -269,7 +269,7 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The middle frequency (800 Hz to 8 kHz) EQ value for transmission. Only used if \c APPLY_TRANSMISSION is set to 
+     *  The middle frequency (800 Hz to 8 kHz) EQ value for transmission. Only used if \c APPLY_TRANSMISSION is set to
      *  \c 2. 0 = middle frequencies are completely attenuated, 1 = middle frequencies are not attenuated at all.
      */
     TRANSMISSION_MID,
@@ -279,7 +279,7 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The high frequency (8 kHz and above) EQ value for transmission. Only used if \c APPLY_TRANSMISSION is set to 
+     *  The high frequency (8 kHz and above) EQ value for transmission. Only used if \c APPLY_TRANSMISSION is set to
      *  \c 2. 0 = high frequencies are completely attenuated, 1 = high frequencies are not attenuated at all.
      */
     TRANSMISSION_HIGH,
@@ -289,15 +289,15 @@ enum Params
      *
      *  **Range**: 0 to 1.
      *
-     *  The contribution of the direct sound path to the overall mix for this event. Lower values reduce the 
+     *  The contribution of the direct sound path to the overall mix for this event. Lower values reduce the
      *  contribution more.
      */
     DIRECT_MIXLEVEL,
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_BOOL`
-     * 
-     *  If true, applies HRTF-based 3D audio rendering to reflections. Results in an improvement in spatialization 
+     *
+     *  If true, applies HRTF-based 3D audio rendering to reflections. Results in an improvement in spatialization
      *  quality when using convolution or hybrid reverb, at the cost of slightly increased CPU usage.
      */
     REFLECTIONS_BINAURAL,
@@ -313,8 +313,8 @@ enum Params
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_BOOL`
-     * 
-     *  If true, applies HRTF-based 3D audio rendering to pathing. Results in an improvement in spatialization 
+     *
+     *  If true, applies HRTF-based 3D audio rendering to pathing. Results in an improvement in spatialization
      *  quality, at the cost of slightly increased CPU usage.
      */
     PATHING_BINAURAL,
@@ -330,14 +330,14 @@ enum Params
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_DATA`
-     * 
+     *
      *  Pointer to the `IPLSimulationOutputs` structure containing simulation results.
      */
     SIMULATION_OUTPUTS,
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_BOOL`
-     * 
+     *
      *  If true, applies HRTF-based 3D audio rendering to the direct sound path. Otherwise, sound is panned based on
      *  the speaker configuration.
      */
@@ -345,7 +345,7 @@ enum Params
 
     /**
      *  **Type**: `FMOD_DSP_PARAMETER_TYPE_DATA`
-     *  
+     *
      *  (FMOD Studio 2.02+) The event's min/max distance range. Automatically set by FMOD Studio.
      */
     DISTANCE_ATTENUATION_RANGE,
@@ -492,6 +492,8 @@ struct State
     IPLReflectionEffect reflectionEffect;
     IPLPathEffect pathEffect;
     IPLAmbisonicsDecodeEffect ambisonicsEffect;
+
+    bool effectStarted;
 };
 
 enum InitFlags
@@ -506,9 +508,16 @@ enum InitFlags
     INIT_AMBISONICSEFFECT = 1 << 6
 };
 
+IPLDirectEffectParams getDirectParams(FMOD_DSP_STATE* state,
+                                      IPLCoordinateSpace3 source,
+                                      IPLCoordinateSpace3 listener,
+                                      bool updatingOverallGain);
+
 InitFlags lazyInit(FMOD_DSP_STATE* state,
                    int numChannelsIn,
-                   int numChannelsOut)
+                   int numChannelsOut,
+                   IPLCoordinateSpace3 source,
+                   IPLCoordinateSpace3 listener)
 {
     auto initFlags = INIT_NONE;
 
@@ -530,6 +539,8 @@ InitFlags lazyInit(FMOD_DSP_STATE* state,
     auto effect = reinterpret_cast<State*>(state->plugindata);
 
     auto status = IPL_STATUS_SUCCESS;
+
+    bool createdDirectEffect = false;
 
     if (numChannelsOut > 0)
     {
@@ -565,6 +576,7 @@ InitFlags lazyInit(FMOD_DSP_STATE* state,
             effectSettings.numChannels = numChannelsIn;
 
             status = iplDirectEffectCreate(gContext, &audioSettings, &effectSettings, &effect->directEffect);
+            createdDirectEffect = true;
         }
 
         if (status == IPL_STATUS_SUCCESS)
@@ -651,6 +663,23 @@ InitFlags lazyInit(FMOD_DSP_STATE* state,
 
             initFlags = static_cast<InitFlags>(initFlags | INIT_REFLECTIONAUDIOBUFFERS);
         }
+
+        if (createdDirectEffect)
+        {
+            IPLDirectEffectParams directParams = getDirectParams(state, source, listener, false);
+            for (int i = 0; i < numChannelsIn; ++i)
+            {
+                memset(effect->inBuffer.data[i], 0, sizeof(float) * effect->inBuffer.numSamples);
+            }
+            // This sucks.  IPLDirectEffect does internal ramping of input parameters
+            // and ramps up from 0 on a newly created effect, causing an unwanted fade
+            // in.  Work around it here.
+            int count = 15;
+            for (int i = 0; i < count; ++i)
+            {
+                iplDirectEffectApply(effect->directEffect, &directParams, &effect->inBuffer, &effect->directBuffer);
+            }
+        }
     }
 
     return initFlags;
@@ -701,13 +730,16 @@ void reset(FMOD_DSP_STATE* state)
     effect->prevDirectMixLevel = 1.0f;
     effect->prevReflectionsMixLevel = 0.0f;
     effect->prevPathingMixLevel = 0.0f;
+
+    effect->effectStarted = false;
 }
 
 FMOD_RESULT F_CALL create(FMOD_DSP_STATE* state)
 {
     state->plugindata = new State();
     reset(state);
-    lazyInit(state, 0, 0);
+    IPLCoordinateSpace3 cs{};
+    lazyInit(state, 0, 0, cs, cs);
     return FMOD_OK;
 }
 
@@ -1282,7 +1314,7 @@ FMOD_RESULT F_CALL process(FMOD_DSP_STATE* state,
 
         // Make sure that audio processing state has been initialized. If initialization fails, stop and emit silence.
         // TODO: if nothing is initialized, do some fallback processing (passthrough, panning, or something like that).
-        auto initFlags = lazyInit(state, numChannelsIn, numChannelsOut);
+        auto initFlags = lazyInit(state, numChannelsIn, numChannelsOut, sourceCoordinates, listenerCoordinates);
         if (!(initFlags & INIT_DIRECTAUDIOBUFFERS) || !(initFlags & INIT_BINAURALEFFECT) || !(initFlags & INIT_DIRECTEFFECT))
             return FMOD_ERR_DSP_SILENCE;
 
@@ -1404,7 +1436,7 @@ FMOD_RESULT F_CALL process(FMOD_DSP_STATE* state,
                 iplAudioBufferMix(gContext, &effect->reflectionsSpatializedBuffer, &effect->outBuffer);
             }
         }
-        
+
         iplAudioBufferInterleave(gContext, &effect->outBuffer, out);
     }
 
