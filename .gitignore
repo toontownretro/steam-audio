@@ -1,0 +1,5 @@
+fmod/built
+fmod/lib
+*.dll
+*.zip
+unreal/src/SteamAudioUnreal/Plugins/FMODStudio/Binaries/Win64
