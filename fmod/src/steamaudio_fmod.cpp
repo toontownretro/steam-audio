@@ -55,8 +55,8 @@ FMOD_PLUGINLIST * F_CALL FMODGetPluginDescriptionList()
     return gPluginList;
 }
 
-void F_CALL iplFMODGetVersion(unsigned int* major, 
-                              unsigned int* minor, 
+void F_CALL iplFMODGetVersion(unsigned int* major,
+                              unsigned int* minor,
                               unsigned int* patch)
 {
     if (major)
@@ -123,7 +123,7 @@ void F_CALL iplFMODSetReverbSource(IPLSource reverbSource)
     {
         iplSourceRelease(&gReverbSource[1]);
         gReverbSource[1] = iplSourceRetain(reverbSource);
- 
+
         gNewReverbSourceWritten = true;
     }
 }
@@ -172,7 +172,7 @@ int numSamplesForDuration(float duration,
 }
 
 IPLVector3 convertVector(float x,
-                         float y, 
+                         float y,
                          float z)
 {
     return IPLVector3{ x, y, -z };
@@ -254,6 +254,8 @@ bool isRunningInEditor()
     uint32_t bufferSize = 1024;
     _NSGetExecutablePath(moduleFileName, &bufferSize);
     return (strstr(moduleFileName, "FMOD Studio.app") != nullptr);
+#else
+    return false;
 #endif
 }
 
