@@ -4,13 +4,13 @@
 
 import os
 import shutil
-import urllib2
+import urllib.request
 import zipfile
 
 version = "4.1.2"
 
 def download_file(url):
-    remote_file = urllib2.urlopen(url)
+    remote_file = urllib.request.urlopen(url)
     with open(os.path.basename(url), "wb") as local_file:
         while True:
             data = remote_file.read(1024)
