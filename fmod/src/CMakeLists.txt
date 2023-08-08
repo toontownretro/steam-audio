@@ -73,6 +73,17 @@ if (BUILD_SHARED_LIBS AND IPL_OS_MACOS)
     target_precompile_headers(phonon_fmod_bundle PRIVATE pch.h)
 endif()
 
+if (IPL_OS_LINUX AND BUILD_SHARED_LIBS AND (NOT IPL_CPU_ARMV8))
+    add_custom_command(
+        TARGET      phonon_fmod
+        POST_BUILD
+        COMMAND     objcopy --only-keep-debug $<TARGET_FILE_NAME:phonon_fmod> $<TARGET_FILE_NAME:phonon_fmod>.dbg
+        COMMAND     strip --strip-debug --strip-unneeded $<TARGET_FILE_NAME:phonon_fmod>
+        COMMAND     objcopy --add-gnu-debuglink=$<TARGET_FILE_NAME:phonon_fmod>.dbg $<TARGET_FILE_NAME:phonon_fmod>
+        COMMENT     "Extracting debug symbols..."
+    )
+endif()
+
 
 #
 # POST-BUILD STEP FOR COPYING fmod -> unity
@@ -81,35 +92,37 @@ endif()
 set(UNITY_FMOD_PLUGIN_DIR "")
 if (IPL_OS_WINDOWS)
     if (IPL_CPU_X86)
-        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/lib/win/x86)
+        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/platforms/win/lib/x86)
     elseif (IPL_CPU_X64)
-        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/lib/win/x86_64)
+        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/platforms/win/lib/x86_64)
     endif()
 elseif (IPL_OS_LINUX)
     if (IPL_CPU_X86)
-        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/lib/linux/x86)
+        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/platforms/linux/lib/x86)
     elseif (IPL_CPU_X64)
-        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/lib/linux/x86_64)
+        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/platforms/linux/lib/x86_64)
     endif()
 elseif (IPL_OS_MACOS)
-    set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/lib/mac)
+    set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/platforms/mac/lib)
 elseif (IPL_OS_ANDROID)
     if (IPL_CPU_ARMV7)
-        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/lib/android/armeabi-v7a)
+        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/platforms/android/lib/armeabi-v7a)
     elseif (IPL_CPU_ARMV8)
-        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/lib/android/arm64-v8a)
+        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/platforms/android/lib/arm64-v8a)
     elseif (IPL_CPU_X86)
-        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/lib/android/x86)
+        set(UNITY_FMOD_PLUGIN_DIR ${CMAKE_HOME_DIRECTORY}/../unity/src/project/SteamAudioUnity/Assets/Plugins/FMOD/platforms/android/lib/x86)
     endif()
 endif()
 
 if (NOT UNITY_FMOD_PLUGIN_DIR STREQUAL "")
     if (IPL_OS_MACOS)
-        add_custom_command(
-            TARGET      phonon_fmod_bundle
-            POST_BUILD
+        # CMake's Xcode generator runs post-build steps before code signing, so the copied files don't have the signature applied.
+        # This causes issues in newer versions of macOS, which refuse to load .bundles that don't have a signature.
+        add_custom_target(phonon_fmod_bundle_copy_unity ALL
             COMMAND     ${CMAKE_COMMAND} -E copy_directory $<TARGET_BUNDLE_DIR:phonon_fmod_bundle> ${UNITY_FMOD_PLUGIN_DIR}/phonon_fmod.bundle
+            VERBATIM
         )
+        add_dependencies(phonon_fmod_bundle_copy_unity phonon_fmod_bundle)
     else()
         add_custom_command(
             TARGET      phonon_fmod
@@ -181,6 +194,11 @@ endif()
 if (IPL_OS_WINDOWS)
     install(
         FILES       ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/phonon_fmod.pdb
+        DESTINATION symbols/${IPL_BIN_SUBDIR}
+    )
+elseif (IPL_OS_LINUX AND NOT IPL_CPU_ARMV8)
+    install(
+        FILES       ${CMAKE_CURRENT_BINARY_DIR}/libphonon_fmod.so.dbg
         DESTINATION symbols/${IPL_BIN_SUBDIR}
     )
 endif()

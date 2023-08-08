@@ -108,8 +108,9 @@ def cmake_generate(args):
         elif args.architecture == 'x64':
             cmake_args += ['-DCMAKE_TOOLCHAIN_FILE=' + root_dir() + '/build/toolchain_android_x64.cmake']
 
-        cmake_args += ['-DCMAKE_ANDROID_NDK=C:/Android/sdk/ndk-bundle']
-        cmake_args += ['-DCMAKE_MAKE_PROGRAM=C:/Android/sdk/ndk-bundle/prebuilt/windows-x86_64/bin/make.exe']
+        if os.environ.get('ANDROID_NDK') is not None:
+            cmake_args += ['-DCMAKE_ANDROID_NDK=' + os.environ.get('ANDROID_NDK')]
+            cmake_args += ['-DCMAKE_MAKE_PROGRAM=' + os.environ.get('ANDROID_NDK') + '/prebuilt/windows-x86_64/bin/make.exe']
 
     # On Linux and Android, specify the build configuration at generate-time.
     if args.platform in ['linux', 'android']:
@@ -131,6 +132,10 @@ def cmake_generate(args):
     # On Windows x64, build documentation.
     if args.platform == 'windows' and args.architecture == 'x64':
         cmake_args += ['-DSTEAMAUDIOUNITY_BUILD_DOCS=TRUE']
+
+    # Point to the location of the Unity editor.
+    if os.environ.get('STEAMAUDIOUNITY_UNITY_DIR') is not None:
+        cmake_args += ['-DUnity_EXECUTABLE_DIR=' + os.environ.get('STEAMAUDIOUNITY_UNITY_DIR')]
 
     cmake_args += ['../..']
 
@@ -160,6 +165,10 @@ def cmake_package(args):
 
     if args.platform in ['windows', 'osx']:
         cmake_args += ['-C', config_name(args)]
+
+    # Point to the location of the Unity editor.
+    if args.platform == 'windows' and os.environ.get('STEAMAUDIOUNITY_UNITY_DIR') is not None:
+        cmake_args += ['-D Unity_EXECUTABLE=' + os.environ.get('STEAMAUDIOUNITY_UNITY_DIR') + '\\Unity.exe']
 
     run_cmake('cpack', cmake_args)
 
@@ -201,7 +210,7 @@ def find_tool(name, dir_regex, min_version):
 
     latest_version_path = None
 
-    for path in matches.keys():
+    for path in list(matches.keys()):
         match = matches[path]
 
         version = []
@@ -251,7 +260,10 @@ os.chdir(build_subdir(args))
 
 cmake_path = find_tool('cmake', r'cmake-(\d+)\.(\d+)\.?(\d+)?', [3, 17])
 if cmake_path is not None:
-    os.environ['PATH'] = os.path.normpath(os.path.join(cmake_path, 'bin')) + os.pathsep + os.environ['PATH']
+    if host_system == 'osx':
+        os.environ['PATH'] = os.path.normpath(os.path.join(cmake_path, 'CMake.app', 'Contents', 'bin')) + os.pathsep + os.environ['PATH']
+    else:
+        os.environ['PATH'] = os.path.normpath(os.path.join(cmake_path, 'bin')) + os.pathsep + os.environ['PATH']
 
 if args.operation == 'generate':
     cmake_generate(args)

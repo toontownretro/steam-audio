@@ -55,10 +55,22 @@ enum class EOpenCLDeviceType : uint8
     GPU UMETA(DisplayName = "GPU"),
 };
 
+/**
+ * Equivalent to IPLHRTFNormType.
+ */
+UENUM(BlueprintType)
+enum class EHRTFNormType : uint8
+{
+    NONE    UMETA(DisplayName = "None"),
+    RMS     UMETA(DisplayName = "RMS"),
+};
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // FSteamAudioSettings
 // ---------------------------------------------------------------------------------------------------------------------
+
+class USOFAFile;
 
 /**
  * Used to store a copy of the current Steam Audio settings upon initialization, with Unreal plugin types replaced by
@@ -107,6 +119,9 @@ struct FSteamAudioSettings
     float TANDuration;
     int TANAmbisonicOrder;
     int TANMaxSources;
+    USOFAFile* SOFAFile;
+    float HRTFVolume;
+    IPLHRTFNormType HRTFNormType;
 };
 
 
@@ -137,15 +152,15 @@ public:
 	bool bExportBSPGeometry;
 
     /** Reference to the Steam Audio Material asset to use as the default material for Static Mesh actors. */
-	UPROPERTY(GlobalConfig, EditAnywhere, Category = SceneExportSettings, meta = (AllowedClasses = "SteamAudioMaterial"))
+	UPROPERTY(GlobalConfig, EditAnywhere, Category = SceneExportSettings, meta = (AllowedClasses = "/Script/SteamAudio.SteamAudioMaterial"))
 	FSoftObjectPath DefaultMeshMaterial;
 
     /** Reference to the Steam Audio Material asset to use as the default material for Landscape actors. */
-    UPROPERTY(GlobalConfig, EditAnywhere, Category = SceneExportSettings, meta = (AllowedClasses = "SteamAudioMaterial"))
+    UPROPERTY(GlobalConfig, EditAnywhere, Category = SceneExportSettings, meta = (AllowedClasses = "/Script/SteamAudio.SteamAudioMaterial"))
     FSoftObjectPath DefaultLandscapeMaterial;
 
     /** Reference to the Steam Audio Material asset to use as the default material for BSP geometry. */
-    UPROPERTY(GlobalConfig, EditAnywhere, Category = SceneExportSettings, meta = (AllowedClasses = "SteamAudioMaterial", DisplayName = "Default BSP Material"))
+    UPROPERTY(GlobalConfig, EditAnywhere, Category = SceneExportSettings, meta = (AllowedClasses = "/Script/SteamAudio.SteamAudioMaterial", DisplayName = "Default BSP Material"))
     FSoftObjectPath DefaultBSPMaterial;
 
     UPROPERTY(GlobalConfig, EditAnywhere, Category = RayTracerSettings)
@@ -200,7 +215,7 @@ public:
     UPROPERTY(GlobalConfig, EditAnywhere, Category = ReflectionsSettings, meta = (UIMin = 0.1f, UIMax = 10.0f))
     float BakingIrradianceMinDistance;
 
-    UPROPERTY(GlobalConfig, EditAnywhere, Category = ReverbSettings, meta = (AllowedClasses = "SoundSubmix"))
+    UPROPERTY(GlobalConfig, EditAnywhere, Category = ReverbSettings, meta = (AllowedClasses = "/Script/Engine.SoundSubmix"))
     FSoftObjectPath ReverbSubmix;
 
     UPROPERTY(GlobalConfig, EditAnywhere, Category = PathingSettings, meta = (UIMin = 1, UIMax = 32))
@@ -254,6 +269,15 @@ public:
 	UPROPERTY(GlobalConfig, EditAnywhere, Category = "TrueAudio Next Settings", meta = (UIMin = 1, UIMax = 128, DisplayName = "TAN Max Sources"))
 	int TANMaxSources;
 
+    UPROPERTY(Config, EditAnywhere, Category = "Default HRTF Settings", meta = (DisplayName = "HRTF Volume Gain (dB)", UIMin = "-12.0", UIMax = "12.0"))
+    float HRTFVolume;
+    
+    UPROPERTY(Config, EditAnywhere, Category = "Default HRTF Settings", meta = (DisplayName = "HRTF Normalization Type"))
+    EHRTFNormType HRTFNormalizationType;
+
+    UPROPERTY(Config, EditAnywhere, Category = "Custom HRTF Settings", meta = (DisplayName = "SOFA File", AllowedClasses = "/Script/SteamAudio.SOFAFile"))
+    FSoftObjectPath SOFAFile;
+    
     USteamAudioSettings();
 
     /** Returns a copy of the settings in a raw struct. */

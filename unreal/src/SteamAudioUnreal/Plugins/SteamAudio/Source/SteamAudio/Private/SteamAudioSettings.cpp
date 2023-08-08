@@ -4,6 +4,7 @@
 
 #include "SteamAudioSettings.h"
 #include "SteamAudioMaterial.h"
+#include "SOFAFile.h"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // USteamAudioSettings
@@ -13,9 +14,9 @@ USteamAudioSettings::USteamAudioSettings()
     : AudioEngine(EAudioEngineType::UNREAL)
     , bExportLandscapeGeometry(true)
     , bExportBSPGeometry(true)
-    , DefaultMeshMaterial(nullptr)
-    , DefaultLandscapeMaterial(nullptr)
-    , DefaultBSPMaterial(nullptr)
+    , DefaultMeshMaterial("/SteamAudio/Materials/Default.Default")
+    , DefaultLandscapeMaterial("/SteamAudio/Materials/Default.Default")
+    , DefaultBSPMaterial("/SteamAudio/Materials/Default.Default")
     , SceneType(ESceneType::DEFAULT)
     , MaxOcclusionSamples(16)
     , RealTimeRays(4096)
@@ -51,6 +52,9 @@ USteamAudioSettings::USteamAudioSettings()
     , TANDuration(1.0f)
     , TANAmbisonicOrder(1)
     , TANMaxSources(32)
+    , HRTFVolume(0.0f)
+    , HRTFNormalizationType(EHRTFNormType::NONE)
+    , SOFAFile(nullptr)
 {}
 
 FSteamAudioSettings USteamAudioSettings::GetSettings() const
@@ -97,6 +101,9 @@ FSteamAudioSettings USteamAudioSettings::GetSettings() const
     Settings.TANDuration = TANDuration;
     Settings.TANAmbisonicOrder = TANAmbisonicOrder;
     Settings.TANMaxSources = TANMaxSources;
+    Settings.SOFAFile = Cast<USOFAFile>(SOFAFile.TryLoad());
+    Settings.HRTFVolume = (Settings.SOFAFile) ? Settings.SOFAFile->Volume : HRTFVolume;
+    Settings.HRTFNormType = (Settings.SOFAFile) ? static_cast<IPLHRTFNormType>(Settings.SOFAFile->NormalizationType) : static_cast<IPLHRTFNormType>(HRTFNormalizationType);
     return Settings;
 }
 
