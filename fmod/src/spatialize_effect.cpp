@@ -882,14 +882,12 @@ IPLDirectEffectParams getDirectParams(FMOD_DSP_STATE* state,
         {
             //IPLDistanceAttenuationModel distanceAttenuationModel{};
             //distanceAttenuationModel.type = IPL_DISTANCEATTENUATIONTYPE_INVERSEDISTANCE;
-            //distanceAttenuationModel.minDistance = effect->distanceAttenuationMinDistance;
+            //distanceAttenuationModel.minDistance = 1.0f / effect->distanceAttenuationMinDistance;
             //params.distanceAttenuation = iplDistanceAttenuationCalculate(gContext, source.origin, listener.origin, &distanceAttenuationModel);
 
             float dist = distance(source.origin, listener.origin);
             float minDist = effect->distanceAttenuationMinDistance;
-            // Do distance falloff using a "biased" inverse distance, where the "minimum distance"
-            // is actually the distance at which the sound reaches 50% gain.
-            params.distanceAttenuation = std::min(1.0f, minDist / (dist + minDist));
+            params.distanceAttenuation = std::min(1.0f, minDist / dist);
         }
     }
 
@@ -1026,13 +1024,14 @@ FMOD_RESULT F_CALL process(FMOD_DSP_STATE* state,
         if (!initFmodOutBufferFormat(inBuffers, outBuffers, state, effect->outputFormat))
             return FMOD_ERR_DSP_DONTPROCESS;
 
+        updateOverallGain(state, sourceCoordinates, listenerCoordinates);
+
         if (inputsIdle)
         {
             // if the sound is idle, we still need to check the expected overall gain to help manage
             // channel counts. updateOverallGain won't do any processing - just determine how loud
             // the sound would be (according to attenuation, etc) if it were playing.
             // Note: the SteamAudio Unity plugin now calculates iplGetDirectSoundPath so this is even lighter
-            updateOverallGain(state, sourceCoordinates, listenerCoordinates);
             return FMOD_ERR_DSP_DONTPROCESS;
         }
     }
