@@ -681,6 +681,7 @@ InitFlags lazyInit(FMOD_DSP_STATE* state,
             initFlags = static_cast<InitFlags>(initFlags | INIT_REFLECTIONAUDIOBUFFERS);
         }
 
+#if 0
         if (createdDirectEffect)
         {
             IPLDirectEffectParams directParams = getDirectParams(state, source, listener, false);
@@ -697,6 +698,7 @@ InitFlags lazyInit(FMOD_DSP_STATE* state,
                 iplDirectEffectApply(effect->directEffect, &directParams, &effect->inBuffer, &effect->directBuffer);
             }
         }
+#endif
     }
 
     return initFlags;
