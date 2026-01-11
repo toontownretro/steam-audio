@@ -172,6 +172,8 @@ bool isRunningInEditor()
     uint32_t bufferSize = 1024;
     _NSGetExecutablePath(moduleFileName, &bufferSize);
     return (strstr(moduleFileName, "FMOD Studio.app") != nullptr);
+#else
+	return false;
 #endif
 }
 
@@ -198,7 +200,7 @@ void initContextAndDefaultHRTF(IPLAudioSettings audioSettings)
     iplContextRelease(&context);
 }
 
-bool initFmodOutBufferFormat(const FMOD_DSP_BUFFER_ARRAY* inBuffers, 
+bool initFmodOutBufferFormat(const FMOD_DSP_BUFFER_ARRAY* inBuffers,
                              FMOD_DSP_BUFFER_ARRAY* outBuffers,
                              FMOD_DSP_STATE* state,
                              ParameterSpeakerFormatType outputFormat)
@@ -207,7 +209,7 @@ bool initFmodOutBufferFormat(const FMOD_DSP_BUFFER_ARRAY* inBuffers,
 	{
 		return false;
 	}
-    
+
     // platforms speaker mode
     FMOD_SPEAKERMODE mixerMode = {};
     // final speaker mode
@@ -217,7 +219,7 @@ bool initFmodOutBufferFormat(const FMOD_DSP_BUFFER_ARRAY* inBuffers,
 	int bufferNumChannels = 0;
 	FMOD_CHANNELMASK bufferChannelMask;
     FMOD_SPEAKERMODE outputSpeakerMode = {};
-    
+
     switch (outputFormat) {
         case PARAMETER_FROM_MIXER:
             outputSpeakerMode = mixerMode;
